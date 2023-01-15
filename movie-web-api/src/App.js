@@ -1,16 +1,34 @@
 
 import './App.css';
 import {getMovieList, searchMovie} from "./api";
+import {useEffect, useState} from "react"
 
 const App = () => {
+  const [popularMovies, setPopularMovies] = useState ([]);
+
   useEffect(() => {
-    getMovieList()
-  }, [])
+    getMovieList().then((result) => {
+      setPopularMovies(result)
+    })
+  }, []); 
 
-  const search = (q) => {
-    console.log({q});
+  const PopularMovieList= () => {
+    return popularMovies.map((movie, i) => {
+      return (
+        <div className="Movie-wrapper" key={i}>
+              <div className="Movie-title">{movie.title}</div>
+                <img className="Movie-img" src={`${process.env.REACT_APP_BASEIMGURL}/${movie.poster_path}`}/>
+              <div className="Movie-date">{movie.release_date}</div>
+              <div className="Movie-rate">{movie.vote_average}</div>
+          </div>
+      )
+    })
   }
-
+  
+  const search = (q) =>{
+    console.log({q})
+  }
+  
   return (
     <div className="App">
       <header className="App-header">
@@ -18,16 +36,11 @@ const App = () => {
         <input 
         placeholder="Cari film kesayangan.." 
         className="Movie-search"
-        onChange= {({target}) => search(target.value)} 
+        onChange= {({target}) => search(target.value)}
         />
 
         <div className="Movie-container">
-          <div className="Movie-wrapper">
-              <div className="Movie-title">CONTOH PERTAMA</div>
-                <img className="Movie-img" />
-              <div className="Movie-date">11/12/2023</div>
-              <div className="Movie-rate">8</div>
-          </div>
+          <PopularMovieList/>
         </div>
 
       </header>
